@@ -43,11 +43,11 @@ var (
 	ErrInvalidCap = errors.New("cache cap <= 0")
 )
 
-// minFrequencyWeight is the minimum weight an element can have in the frequency list
+// minFrequencyWeight is the minimum weight an element can have in the frequency list.
 const minFrequencyWeight = 1
 
-// New creates a new instance of the LFU Cache
-// It returns and ErrInvalidCap error if the cache cap <= 0
+// New creates a new instance of the LFU Cache.
+// It returns and ErrInvalidCap error if the cache cap <= 0.
 func New(cap int) (cache *Cache, err error) {
 	if cap <= 0 {
 		return cache, ErrInvalidCap
@@ -62,40 +62,41 @@ func New(cap int) (cache *Cache, err error) {
 	return cache, err
 }
 
-// Len returns the number of items in the Cache
+// Len returns the number of items in the Cache.
 func (cache *Cache) Len() int {
 	return len(cache.lookupTable)
 }
 
-// Cap returns the cap fo the Cache
+// Cap returns the cap fo the Cache.
 func (cache *Cache) Cap() int {
 	return cache.cap
 }
 
-// IsFull determines if the Cache is full
+// IsFull determines if the Cache is full.
 func (cache *Cache) IsFull() bool {
 	return cache.Len() == cache.Cap()
 }
 
-// IsEmpty determines if there are no items in the Cache
+// IsEmpty determines if there are no items in the Cache.
 func (cache *Cache) IsEmpty() bool {
 	return cache.Len() == 0
 }
 
-// Set is used to an item in the Cache with key and value
+// Set is used to an item in the Cache with key and value.
+// It returns ErrInvalidCap if the cache is not initialized.
 func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
-	// check if cache has been initialized
+	// check if cache has been initialized.
 	if cache.Cap() == 0 {
 		return ErrInvalidCap
 	}
 
-	// if the key already exists, change the value
+	// if the key already exists, change the value.
 	if _, ok := cache.lookupTable[key]; ok {
 		cache.lookupTable[key].value = value
 		return
 	}
 
-	// create a lookup table node
+	// create a lookup table node.
 	lookupTableNode := &lookupTableNode{value: value}
 
 	// check if the lookupTable has enough space. If it doesn't, pop the least frequently used item from the Cache.
@@ -103,25 +104,25 @@ func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 		cache.pop()
 	}
 
-	// set the lookup table node
+	// set the lookup table node.
 	cache.lookupTable[key] = lookupTableNode
 
-	// if frequency list is empty or the first item in the list doesn't have weight 1 create a new node with weight 1
+	// if frequency list is empty or the first item in the list doesn't have weight 1 create a new node with weight 1.
 	if cache.frequencyList.Len() == 0 || cache.frequencyList.Front().Value.(*frequencyListNode).weight != minFrequencyWeight {
 		freqListNode := &frequencyListNode{weight: minFrequencyWeight, list: list.New()}
 		freqListNode.element = cache.frequencyList.PushFront(freqListNode)
 	}
 
-	// get the first item in the frequency list node. We're sure the item has the weight 1
+	// get the first item in the frequency list node. We're sure the item has the weight 1.
 	freqListNode := cache.frequencyList.Front().Value.(*frequencyListNode)
 
-	// set the node parent of the newly set item in the frequency list node Cache
+	// set the node parent of the newly set item in the frequency list node Cache.
 	freqListNodeListNode := &frequencyListNodeListNode{parent: freqListNode, key: key}
 
 	// set the frequencyListNodeListNode in the lookup table node.
 	lookupTableNode.frequencyListNodeListNode = freqListNodeListNode
 
-	// add the newly created frequencyListNodeListNode to the frequencyListNode of weight 1
+	// add the newly created frequencyListNodeListNode to the frequencyListNode of weight 1.
 	freqListNodeListNode.element = freqListNode.list.PushBack(freqListNodeListNode)
 
 	return err
@@ -129,7 +130,7 @@ func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 
 // Get returns an item for the Cache having a key. It returns ErrCacheMiss if there's a Cache miss.
 func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
-	// check if the key exists if it doesn't return with a Cache miss error
+	// check if the key exists if it doesn't return with a Cache miss error.
 	node, ok := cache.lookupTable[key]
 	if !ok {
 		return value, ErrCacheMiss
@@ -154,18 +155,18 @@ func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
 	return node.value, err
 }
 
-// pop removes the least frequently used item from the Cache
+// pop removes the least frequently used item from the Cache.
 func (cache *Cache) pop() {
-	// The frequency list node MUST exist i.e the cache cap
+	// The frequency list node MUST exist i.e the cache cap.
 	freqListNodeListNode := cache.frequencyList.Front().Value.(*frequencyListNode).list.Front().Value.(*frequencyListNodeListNode)
 
-	// Remove key from lookup table
+	// Remove key from lookup table.
 	delete(cache.lookupTable, freqListNodeListNode.key)
 
-	// remove node from frequency list node
+	// remove node from frequency list node.
 	cache.frequencyList.Front().Value.(*frequencyListNode).list.Remove(freqListNodeListNode.element)
 
-	// if frequency list node list is now empty, remove the frequency list node from Cache's frequency list
+	// if frequency list node list is now empty, remove the frequency list node from Cache's frequency list.
 	if cache.frequencyList.Front().Value.(*frequencyListNode).list.Len() == 0 {
 		cache.frequencyList.Remove(cache.frequencyList.Front())
 	}
