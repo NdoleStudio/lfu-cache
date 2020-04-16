@@ -86,7 +86,7 @@ func (cache *Cache) IsEmpty() bool {
 // It returns ErrInvalidCap if the cache is not initialized.
 func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 	// check if cache has been initialized.
-	if cache.Cap() == 0 {
+	if cache.Cap() <= 0 {
 		return ErrInvalidCap
 	}
 
@@ -137,20 +137,32 @@ func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
 	}
 
 	freqListNode := node.frequencyListNodeListNode.parent
+
+	// check if the next node's weight is equal to current weight +1
+	// if not, create a new node with weight = current weight + 1 ans insert if after the current node
 	if freqListNode.element.Next() == nil || (freqListNode.element.Next().Value.(*frequencyListNode).weight != freqListNode.weight+1) {
 		newFreqListNode := &frequencyListNode{
 			weight:  freqListNode.weight + 1,
 			element: nil,
 			list:    list.New(),
 		}
-		cache.frequencyList.InsertAfter(newFreqListNode, freqListNode.element)
+		newFreqListNode.element = cache.frequencyList.InsertAfter(newFreqListNode, freqListNode.element)
 	}
 
+	// gets the list with weight = node weight + 1. This node MUST exist because it was created above
 	nextFreqListNode := freqListNode.element.Next().Value.(*frequencyListNode)
 	node.frequencyListNodeListNode.parent = nextFreqListNode
-	node.frequencyListNodeListNode.element = nextFreqListNode.list.PushBack(node.frequencyListNodeListNode)
 
+	// remove node from current frequency list node
 	freqListNode.list.Remove(node.frequencyListNodeListNode.element)
+
+	// remove freq list node from the cache's freq list if the list node has NO item in it.
+	if freqListNode.list.Len() == 0 {
+		cache.frequencyList.Remove(freqListNode.element)
+	}
+
+	// setting the element of the node in it's new list
+	node.frequencyListNodeListNode.element = nextFreqListNode.list.PushBack(node.frequencyListNodeListNode)
 
 	return node.value, err
 }
