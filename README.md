@@ -10,7 +10,7 @@ Lest Frequently Used (LFU) Cache
 
 This is an in memory implementation of a least frequently used (LFU) cache in Go with constant time complexity O(1) for `Set`, `Set`, and `Cache Eviction` operations. The least recently used item is evicted in the case where 2 items thems have the same least frequency.
 
-It's based on this paper [http://dhruvbird.com/lfu.pdf](http://dhruvbird.com/lfu.pdf) by some very smart people.gs
+It's based on this paper [http://dhruvbird.com/lfu.pdf](http://dhruvbird.com/lfu.pdf) by some very smart people
 
 ## Documentation
 
