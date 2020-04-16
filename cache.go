@@ -1,3 +1,11 @@
+// Package lfucache an in memory least frequently used (LFU) cache.
+// All operations have with O(1) complexity.
+// When evicting an item from the cache,
+// if 2 items have the same frequency the (least recently used) LRU item is evicted.
+//
+// Ideally, you should provide a wrapper around this class
+// to ensure strict type checks for keys and values that can be put into the cache.
+//
 package lfucache
 
 import (
@@ -47,7 +55,7 @@ var (
 const minFrequencyWeight = 1
 
 // New creates a new instance of the LFU Cache.
-// It returns and ErrInvalidCap error if the cache cap <= 0.
+// It returns and ErrInvalidCap error if the cap <= 0.
 func New(cap int) (cache *Cache, err error) {
 	if cap <= 0 {
 		return cache, ErrInvalidCap
