@@ -6,4 +6,4 @@ Implementation of a least frequently used (LFU) cache  in Go with constant time 
 [![Go Report Card](https://goreportcard.com/badge/github.com/NdoleStudio/lfu-cache)](https://goreportcard.com/report/github.com/NdoleStudio/lfu-cache) 
 [![GitHub contributors](https://img.shields.io/github/contributors/NdoleStudio/lfu-cache)](https://github.com/NdoleStudio/lfu-cache/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/NdoleStudio/lfu-cache?color=brightgreen)](https://github.com/NdoleStudio/lfu-cache/blob/master/LICENSE)
-![GitHub All Releases](https://img.shields.io/github/downloads/NdoleStudio/lfu-cache/total)
+[![GoDoc](https://godoc.org/github.com/NdoleStudio/lfu-cache?status.svg)](https://godoc.org/github.com/NdoleStudio/lfu-cache)
