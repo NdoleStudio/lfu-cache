@@ -69,6 +69,7 @@ go get https://github.com/NdoleStudio/lfu-cache
 
 - There are some helper methods like `IsEmpty()`, `Len()`, `IsFull` `Cap()`
 
+
     ```go
     // creating the cache with capacity 3
     cache, _ := lfucache.New(3)
