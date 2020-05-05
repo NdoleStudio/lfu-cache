@@ -3,6 +3,7 @@ package lfucache
 import (
 	"testing"
 
+	"github.com/dgrijalva/lfu-go"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -378,4 +379,38 @@ func TestInternalImplementation(t *testing.T) {
 		_, err = cache.Get("are")
 		assert.EqualError(t, err, ErrCacheMiss.Error())
 	})
+}
+
+func BenchmarkCache(b *testing.B) {
+	cache, err := New(100)
+	if err != nil {
+		b.Fatal(err.Error())
+	}
+
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 1000; j++ {
+			err = cache.Set(string(i), j)
+			if err != nil {
+				b.Fatal(err.Error())
+			}
+
+			_, err = cache.Get(string(i))
+			if err != nil {
+				b.Fatal(err.Error())
+			}
+		}
+	}
+}
+
+func BenchmarkOther(b *testing.B) {
+	cache := lfu.New()
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 1000; j++ {
+			if j >= 100 {
+				cache.Evict(1)
+			}
+			cache.Set(string(i), j)
+			cache.Get(string(i))
+		}
+	}
 }
