@@ -5,7 +5,7 @@ Lest Frequently Used (LFU) Cache
 [![Go Report Card](https://goreportcard.com/badge/github.com/NdoleStudio/lfu-cache)](https://goreportcard.com/report/github.com/NdoleStudio/lfu-cache) 
 [![GitHub contributors](https://img.shields.io/github/contributors/NdoleStudio/lfu-cache)](https://github.com/NdoleStudio/lfu-cache/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/NdoleStudio/lfu-cache?color=brightgreen)](https://github.com/NdoleStudio/lfu-cache/blob/master/LICENSE)
-[![GoDoc](https://godoc.org/github.com/NdoleStudio/lfu-cache?status.svg)](https://godoc.org/github.com/NdoleStudio/lfu-cache)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/NdoleStudio/lfu-cache)](https://pkg.go.dev/github.com/NdoleStudio/lfu-cache)
 
 
 This is an in memory implementation of a least frequently used (LFU) cache in Go with constant time complexity O(1) for `Set`, `Set`, and `Cache Eviction` operations. The least recently used item is evicted in the case where 2 items thems have the same least frequency.
