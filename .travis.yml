@@ -18,6 +18,7 @@ before_script:
 script:
   # This compiles the go2 files into .go files
   - docker run --rm -v "$PWD":/go/src/myapp -w /go/src/myapp levonet/golang:go2go /bin/bash -c "go tool go2go translate"
+  - ls
   - golangci-lint run
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic
 
