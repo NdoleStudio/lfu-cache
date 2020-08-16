@@ -1,18 +1,10 @@
-FROM golang:1.14 as builder
+FROM levonet/golang:go2go
 
-RUN git clone \
-    --depth 1 \
-    --single-branch \
-    --branch=dev.go2go \
-    --progress  \
-    https://go.googlesource.com/go /go2
+RUN apt-get update && apt-get install git -y
 
-ENV CGO_ENABLED=0
-WORKDIR /go2/src
-RUN ./all.bash
+RUN git clone https://github.com/dgrijalva/lfu-go /go/src/github.com/dgrijalva/lfu-go && \
+    git clone https://github.com/arschles/assert /go/src/github.com/arschles/assert
 
-FROM alpine:3.12.0
+COPY ./ /go/src/myapp
 
-COPY --from=builder /go2 /go
-ENV PATH=$PATH:/go/bin
-ENV GOROOT=/go
+WORKDIR /go/src/myapp
