@@ -6,7 +6,7 @@
 // Ideally, you should provide a wrapper around this class
 // to ensure strict type checks for keys and values that can be put into the cache.
 //
-package main
+package lfucache
 
 import (
 	"container/list"
@@ -192,9 +192,4 @@ func (cache *Cache(Key, Value)) pop() {
 	if cache.frequencyList.Front().Value.(*frequencyListNode).list.Len() == 0 {
 		cache.frequencyList.Remove(cache.frequencyList.Front())
 	}
-}
-
-func main() {
-	_, _ = New(string, int)(3);
-
 }
