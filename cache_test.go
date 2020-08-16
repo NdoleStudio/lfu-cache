@@ -1,6 +1,7 @@
 package lfucache
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/dgrijalva/lfu-go"
@@ -389,12 +390,12 @@ func BenchmarkCache(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < 1000; j++ {
-			err = cache.Set(string(i), j)
+			err = cache.Set(strconv.Itoa(i), j)
 			if err != nil {
 				b.Fatal(err.Error())
 			}
 
-			_, err = cache.Get(string(i))
+			_, err = cache.Get(strconv.Itoa(i))
 			if err != nil {
 				b.Fatal(err.Error())
 			}
@@ -409,8 +410,8 @@ func BenchmarkOther(b *testing.B) {
 			if j >= 100 {
 				cache.Evict(1)
 			}
-			cache.Set(string(i), j)
-			cache.Get(string(i))
+			cache.Set(strconv.Itoa(i), j)
+			cache.Get(strconv.Itoa(i))
 		}
 	}
 }
