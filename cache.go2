@@ -2,10 +2,6 @@
 // All operations have with O(1) complexity.
 // When evicting an item from the cache,
 // if 2 items have the same frequency the (least recently used) LRU item is evicted.
-//
-// Ideally, you should provide a wrapper around this class
-// to ensure strict type checks for keys and values that can be put into the cache.
-//
 package lfucache
 
 import (
