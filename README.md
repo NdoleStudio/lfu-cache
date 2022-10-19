@@ -30,7 +30,7 @@ go get https://github.com/NdoleStudio/lfu-cache
     import "github.com/NdoleStudio/lfu-cache"
     
     // creating the cache with capacity 3
-    cache, err := lfucache.New(3)
+    cache, err := lfucache.New[string, int](3)
     if err != nil {
         // the cap is invalid
     }
@@ -63,8 +63,7 @@ go get https://github.com/NdoleStudio/lfu-cache
         // cache miss
     }
     
-    println(val) // val is of type interface{}
-    println(val.(string)) // print val as string
+    println(val) // val is of type `int`
     ```
 
 - There are some helper methods like `IsEmpty()`, `Len()`, `IsFull` `Cap()`
@@ -72,7 +71,7 @@ go get https://github.com/NdoleStudio/lfu-cache
 
     ```go
     // creating the cache with capacity 3
-    cache, _ := lfucache.New(3)
+    cache, _ := lfucache.New[string, string](3)
     
     // setting a value
     _ = cache.Set("key", "value")
