@@ -16,16 +16,16 @@ import (
 
 // Cache is the data structure for the LFU Cache.
 // The zero value of this cache is not ready to use because the cap is zero
-type Cache struct {
+type Cache[K comparable, V any] struct {
 	cap           int
 	frequencyList *list.List
-	lookupTable   map[interface{}]*lookupTableNode
+	lookupTable   map[K]*lookupTableNode[K, V]
 }
 
 // lookupTableNode is a hash map for the items in the lfu Cache.
-type lookupTableNode struct {
-	value                     interface{}
-	frequencyListNodeListNode *frequencyListNodeListNode
+type lookupTableNode[K comparable, V any] struct {
+	value                     V
+	frequencyListNodeListNode *frequencyListNodeListNode[K]
 }
 
 // frequentListNode is an element in the frequency list
@@ -37,9 +37,9 @@ type frequencyListNode struct {
 }
 
 // frequencyListNodeListNode is an item in the frequency list linked list for a particular weight.
-type frequencyListNodeListNode struct {
+type frequencyListNodeListNode[K comparable] struct {
 	parent  *frequencyListNode
-	key     interface{}
+	key     K
 	element *list.Element
 }
 
@@ -56,43 +56,43 @@ const minFrequencyWeight = 1
 
 // New creates a new instance of the LFU Cache.
 // It returns and ErrInvalidCap error if the cap <= 0.
-func New(cap int) (cache *Cache, err error) {
+func New[K comparable, V any](cap int) (cache *Cache[K, V], err error) {
 	if cap <= 0 {
 		return cache, ErrInvalidCap
 	}
 
-	cache = &Cache{
+	cache = &Cache[K, V]{
 		cap:           cap,
 		frequencyList: list.New(),
-		lookupTable:   make(map[interface{}]*lookupTableNode, cap),
+		lookupTable:   make(map[K]*lookupTableNode[K, V], cap),
 	}
 
 	return cache, err
 }
 
 // Len returns the number of items in the Cache.
-func (cache *Cache) Len() int {
+func (cache *Cache[K, V]) Len() int {
 	return len(cache.lookupTable)
 }
 
 // Cap returns the cap fo the Cache.
-func (cache *Cache) Cap() int {
+func (cache *Cache[K, V]) Cap() int {
 	return cache.cap
 }
 
 // IsFull determines if the Cache is full.
-func (cache *Cache) IsFull() bool {
+func (cache *Cache[K, V]) IsFull() bool {
 	return cache.Len() == cache.Cap()
 }
 
 // IsEmpty determines if there are no items in the Cache.
-func (cache *Cache) IsEmpty() bool {
+func (cache *Cache[K, V]) IsEmpty() bool {
 	return cache.Len() == 0
 }
 
 // Set is used to an item in the Cache with key and value.
 // It returns ErrInvalidCap if the cache is not initialized.
-func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
+func (cache *Cache[K, V]) Set(key K, value V) (err error) {
 	// check if cache has been initialized.
 	if cache.Cap() <= 0 {
 		return ErrInvalidCap
@@ -105,7 +105,7 @@ func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 	}
 
 	// create a lookup table node.
-	lookupTableNode := &lookupTableNode{value: value}
+	lookupTableNode := &lookupTableNode[K, V]{value: value}
 
 	// check if the lookupTable has enough space. If it doesn't, pop the least frequently used item from the Cache.
 	if cache.IsFull() {
@@ -125,7 +125,7 @@ func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 	freqListNode := cache.frequencyList.Front().Value.(*frequencyListNode)
 
 	// set the node parent of the newly set item in the frequency list node Cache.
-	freqListNodeListNode := &frequencyListNodeListNode{parent: freqListNode, key: key}
+	freqListNodeListNode := &frequencyListNodeListNode[K]{parent: freqListNode, key: key}
 
 	// set the frequencyListNodeListNode in the lookup table node.
 	lookupTableNode.frequencyListNodeListNode = freqListNodeListNode
@@ -137,7 +137,7 @@ func (cache *Cache) Set(key interface{}, value interface{}) (err error) {
 }
 
 // Get returns an item for the Cache having a key. It returns ErrCacheMiss if there's a Cache miss.
-func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
+func (cache *Cache[K, V]) Get(key K) (value V, err error) {
 	// check if the key exists if it doesn't return with a Cache miss error.
 	node, ok := cache.lookupTable[key]
 	if !ok {
@@ -147,7 +147,7 @@ func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
 	freqListNode := node.frequencyListNodeListNode.parent
 
 	// check if the next node's weight is equal to current weight +1
-	// if not, create a new node with weight = current weight + 1 ans insert if after the current node
+	// if not, create a new node with weight = current weight + 1 and insert if after the current node
 	if freqListNode.element.Next() == nil || (freqListNode.element.Next().Value.(*frequencyListNode).weight != freqListNode.weight+1) {
 		newFreqListNode := &frequencyListNode{
 			weight:  freqListNode.weight + 1,
@@ -169,16 +169,16 @@ func (cache *Cache) Get(key interface{}) (value interface{}, err error) {
 		cache.frequencyList.Remove(freqListNode.element)
 	}
 
-	// setting the element of the node in it's new list
+	// setting the element of the node in its new list
 	node.frequencyListNodeListNode.element = nextFreqListNode.list.PushBack(node.frequencyListNodeListNode)
 
 	return node.value, err
 }
 
 // pop removes the least frequently used item from the Cache.
-func (cache *Cache) pop() {
-	// The frequency list node MUST exist i.e the cache cap.
-	freqListNodeListNode := cache.frequencyList.Front().Value.(*frequencyListNode).list.Front().Value.(*frequencyListNodeListNode)
+func (cache *Cache[K, V]) pop() {
+	// The frequency list node MUST exist i.e. the cache cap.
+	freqListNodeListNode := cache.frequencyList.Front().Value.(*frequencyListNode).list.Front().Value.(*frequencyListNodeListNode[K])
 
 	// Remove key from lookup table.
 	delete(cache.lookupTable, freqListNodeListNode.key)
