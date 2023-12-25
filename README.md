@@ -19,7 +19,7 @@ You can use view the standard documentation on  [https://pkg.go.dev/github.com/N
 ## Install
 
 ```shell
-go get https://github.com/NdoleStudio/lfu-cache
+go get https://github.com/NdoleStudio/lfu-cache/v2
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ go get https://github.com/NdoleStudio/lfu-cache
 - To get started, import the `lfu-cache` package and create a cache instance. `New()` returns an `ErrInvalidCap` error  if you input a capacity which is less than or equal to `0`.
 
     ```go
-    import "github.com/NdoleStudio/lfu-cache"
+    import "https://github.com/NdoleStudio/lfu-cache/v2"
     
     // creating the cache with capacity 3
     cache, err := lfucache.New[string, int](3)

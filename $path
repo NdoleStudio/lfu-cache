@@ -1,0 +1,26 @@
+mode: set
+github.com/NdoleStudio/lfu-cache/v2/cache.go:59.72,60.14 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:60.14,62.3 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:64.2,70.19 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:74.37,76.2 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:79.37,81.2 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:84.41,86.2 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:89.42,91.2 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:95.59,97.22 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:97.22,99.3 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:102.2,102.41 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:102.41,105.3 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:108.2,111.20 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:111.20,113.3 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:116.2,119.123 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:119.123,122.3 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:125.2,136.12 5 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:140.59,143.9 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:143.9,145.3 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:147.2,151.132 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:151.132,158.3 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:161.2,168.34 4 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:168.34,170.3 1 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:173.2,175.24 2 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:179.33,190.76 4 1
+github.com/NdoleStudio/lfu-cache/v2/cache.go:190.76,192.3 1 1

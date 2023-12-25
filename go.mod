@@ -1,4 +1,4 @@
-module github.com/NdoleStudio/lfu-cache
+module github.com/NdoleStudio/lfu-cache/v2
 
 go 1.18
 
